@@ -1,0 +1,45 @@
+@startuml
+left to right direction
+skinparam dpi 150
+skinparam componentStyle rectangle
+
+actor "End User" as User
+actor "Admin" as Admin
+
+rectangle "Smart_Text_Analyzer" {
+  usecase "Sign Up / Register" as UC_Register
+  usecase "Login / Authenticate" as UC_Login
+  usecase "Upload Document" as UC_Upload
+  usecase "Analyze Text" as UC_Analyze
+  usecase "Grammar Check" as UC_Grammar
+  usecase "Plagiarism Check" as UC_Plagiarism
+  usecase "Generate Summary" as UC_Summarize
+  usecase "Generate Suggestions" as UC_Suggestions
+  usecase "View / Download Report" as UC_Report
+  usecase "Manage Users / Settings" as UC_AdminManage
+}
+
+User --> UC_Register
+User --> UC_Login
+User --> UC_Upload
+User --> UC_Analyze
+User --> UC_Grammar
+User --> UC_Plagiarism
+User --> UC_Summarize
+User --> UC_Suggestions
+User --> UC_Report
+
+Admin --> UC_Login
+Admin --> UC_AdminManage
+Admin --> UC_Report
+
+UC_Upload .> UC_Analyze : includes
+UC_Analyze .> UC_Grammar : includes
+UC_Analyze .> UC_Plagiarism : includes
+UC_Analyze .> UC_Suggestions : includes
+UC_Analyze .> UC_Summarize : includes
+
+note right of UC_Plagiarism
+  May call Background Worker and Vector DB
+end note
+@enduml

@@ -1,0 +1,114 @@
+@startuml
+skinparam dpi 150
+skinparam classAttributeIconSize 0
+hide circle
+top to bottom direction
+
+' Grouping Logic for Layout
+together {
+    class TextRoutes
+    class UploadRoutes
+    class QueryRoutes
+    class HumanizerRoutes
+    class PlagiarismRoutes
+}
+
+together {
+    class TextProcessor
+    class ToneGenerator
+    class QueryResponser
+    class PDFLoader
+    class Chunker
+    class LLMResponder
+}
+
+together {
+    class DBManager
+    class VectorDBManager
+    class TextModel
+}
+
+class TextModel {
+    - user: String
+    - text: String
+}
+
+class TextRoutes {
+    + posttext() : JSON
+    + gettext() : JSON
+    + get_available_tones() : JSON
+}
+
+class UploadRoutes {
+    + upload_file() : JSON
+}
+
+class QueryRoutes {
+    + query_llm() : JSON
+}
+
+class HumanizerRoutes {
+    + humanize_text() : JSON
+}
+
+class PlagiarismRoutes {
+    + check() : JSON
+}
+
+class TextProcessor {
+    + gram_check(text: String) : Tuple
+    + calculate_readability(text: String) : Dict
+    + calculate_correction_score(original: String, corrected: String) : float
+}
+
+class ToneGenerator {
+    + generate_tone_suggestions(text: String, tone: String) : String
+}
+
+class QueryResponser {
+    + response(query_text: String) : String
+}
+
+class PDFLoader {
+    + load_pdfs() : List[Document]
+}
+
+class Chunker {
+    + chunk(docs: List[Document]) : List[Document]
+}
+
+class LLMResponder {
+    + get_response_from_gemini(context: String, query: String) : String
+}
+
+class DBManager {
+    + col : Collection
+    + get_collection() : Collection
+}
+
+class VectorDBManager {
+    + add_to_chroma(chunks: List[Document]) : void
+    + get_embed() : Embeddings
+}
+
+' Relationships
+TextRoutes -down-> TextProcessor : uses
+TextRoutes -down-> ToneGenerator : uses
+TextRoutes -down-> DBManager : uses
+
+UploadRoutes -down-> PDFLoader : uses
+UploadRoutes -down-> Chunker : uses
+UploadRoutes -down-> VectorDBManager : uses
+
+QueryRoutes -down-> QueryResponser : uses
+
+QueryResponser -down-> VectorDBManager : reads
+QueryResponser -down-> LLMResponder : delegates
+
+TextProcessor .down.> TextModel : processes >
+
+' Layout Anchors
+TextRoutes -[hidden]down-> TextProcessor
+TextProcessor -[hidden]down-> DBManager
+
+@enduml
