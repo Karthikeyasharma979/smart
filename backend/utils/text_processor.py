@@ -1,5 +1,13 @@
-import language_tool_python
-import textstat
+try:
+    import language_tool_python
+except ImportError:
+    language_tool_python = None
+
+try:
+    import textstat
+except ImportError:
+    textstat = None
+
 import re
 import logging
 from typing import Dict, List, Tuple
@@ -20,7 +28,10 @@ POST_PROCESS_PATTERNS = [
 ]
 
 try:
-    tool = language_tool_python.LanguageTool('en-US')
+    if language_tool_python:
+        tool = language_tool_python.LanguageTool('en-US')
+    else:
+        tool = None
 except Exception as e:
     logger.error(f"Failed to initialize LanguageTool: {e}")
     tool = None
@@ -129,6 +140,9 @@ def calculate_readability(text: str) -> Dict:
     """Calculate readability metrics with error handling"""
     if not text.strip():
         return {"error": "Empty text"}
+    
+    if not textstat:
+        return {"error": "Readability analysis unavailable (library missing)"}
     
     try:
         flesch_score = textstat.flesch_reading_ease(text)
