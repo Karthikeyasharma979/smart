@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from utils.QueryResponser import response
+
 from utils.GenerativeAI import chat
 import logging
 logging.basicConfig(level=logging.INFO)
