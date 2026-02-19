@@ -1,19 +1,21 @@
-# dependencies
+# Lightweight dependencies for deployment
 Flask
 flask-cors
 python-dotenv
 pymongo
-language-tool-python
-textstat
 requests
 openai
-langchain
-langchain-community
-langchain-chroma
-langchain-text-splitters
-sentence-transformers
-pypdf
 serverless-wsgi
 werkzeug
-tiktoken
 gunicorn
+
+# Heavy ML libraries removed for Vercel/Lambda constraints:
+# language-tool-python
+# textstat
+# langchain
+# langchain-community
+# langchain-chroma
+# langchain-text-splitters
+# sentence-transformers
+# pypdf
+# tiktoken
